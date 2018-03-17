@@ -1,7 +1,7 @@
 # Books
 Books is an app that displays book results using the JSON result (see below) returned by the [Google Books API](https://developers.google.com/books/docs/v1/reference/volumes/list).
 This app is my first attempt at using/converting Java code to Kotlin. Books are displayed by parsing the JSON 
-result returnes by the API to extract properties like the title, author, a link to buy the book, etc...
+result returned by the API to extract properties like the title, author, a link to buy the book, etc...
 Users can swipe left to add a book to a list of favorites and right to remove it. 
 
 # Screenshots
