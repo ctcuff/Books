@@ -8,9 +8,8 @@ Users can swipe left to add a book to a list of favorites and right to remove it
 <img src="https://github.com/ctcuff/Books/blob/master/app/screenshots/home_screen.png" width="275"> <img src="https://github.com/ctcuff/Books/blob/master/app/screenshots/search_activity.png" width="275">
 
 # Sample JSON Response
-This is a response generated for the book Harry Potter using this link: 
-
-https://www.googleapis.com/books/v1/volumes?q=harry%20potter&maxResults=10&startIndex=0
+[This is a response generated for the book Harry Potter](https://www.googleapis.com/books/v1/volumes?q=harry%20potter&maxResults=10&startIndex=0
+)
 
 Parameter Used | Definition
 ---------------|---------
