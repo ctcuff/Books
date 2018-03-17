@@ -2,8 +2,6 @@ package com.camtech.books.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
@@ -16,13 +14,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 
-import com.camtech.books.CursorViewAdapter;
+import com.camtech.books.adapters.CursorViewAdapter;
 import com.camtech.books.R;
 import com.camtech.books.database.DBContract;
 import com.camtech.books.database.DBHelper;
+import com.camtech.books.utils.OnSwipeListener;
 import com.camtech.books.utils.SuggestionBuilder;
 import com.camtech.books.utils.SwipeController;
 
@@ -34,14 +32,14 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private final String TAG = MainActivity.class.getSimpleName();
-    final int VOICE_REQUEST_CODE = 100;
-    PersistentSearchView searchView;
-    SuggestionBuilder suggestionBuilder;
-    RecyclerView recyclerView;
-    DBHelper dbHelper;
-    CursorViewAdapter adapter;
-    Cursor cursor;
-    DrawerLayout drawerLayout;
+    private final int VOICE_REQUEST_CODE = 100;
+    private PersistentSearchView searchView;
+    private SuggestionBuilder suggestionBuilder;
+    private RecyclerView recyclerView;
+    private DBHelper dbHelper;
+    private CursorViewAdapter adapter;
+    private Cursor cursor;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +78,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SwipeController swipeController = new SwipeController(this);
         // Make sure only the delete swipe option is shown
         swipeController.setAddAndDelete(false);
-        swipeController.setOnSwipeListener(position -> {
-            adapter.getBook(position).removeFromFavorites(getBaseContext(), adapter.getBook(position).getApiId());
-            reloadRecyclerView();
+        swipeController.setOnSwipeListener(new OnSwipeListener() {
+            @Override
+            public void onSwipe(int position) {
+                adapter.getBook(position).removeFromFavorites(getBaseContext(), adapter.getBook(position).getApiId());
+                reloadRecyclerView();
+            }
         });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);

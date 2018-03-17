@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -23,11 +24,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.camtech.books.R;
-import com.camtech.books.ViewAdapter;
+import com.camtech.books.adapters.ViewAdapter;
 import com.camtech.books.data.Book;
 import com.camtech.books.utils.ConnectivityReceiver;
 import com.camtech.books.utils.NetworkUtils;
 import com.camtech.books.utils.ConnectionListener;
+import com.camtech.books.utils.OnSwipeListener;
 import com.camtech.books.utils.ScrollListener;
 import com.camtech.books.utils.SuggestionBuilder;
 import com.camtech.books.utils.SwipeController;
@@ -112,7 +114,7 @@ public class SearchBooks extends AppCompatActivity {
                     snackbar.dismiss();
                 }
                 if (booksTask.getStatus() != AsyncTask.Status.PENDING) {
-                    new SearchBooksTask().execute(NetworkUtils.buildUrl(searchQuery, MAX_RESULTS, startIndex));
+                    new SearchBooksTask().execute(NetworkUtils.INSTANCE.buildUrl(searchQuery, MAX_RESULTS, startIndex));
                 }
             }
         });
@@ -129,7 +131,7 @@ public class SearchBooks extends AppCompatActivity {
             protected void loadMoreItems() {
                 // Only load more items if there's internet connection
                 if (connectivityReceiver.hasConnection()) {
-                    new SearchBooksTask().execute(NetworkUtils.buildUrl(searchQuery, MAX_RESULTS, startIndex));
+                    new SearchBooksTask().execute(NetworkUtils.INSTANCE.buildUrl(searchQuery, MAX_RESULTS, startIndex));
                 } else {
                     isLoading = true;
                     if (snackbar != null && !snackbar.isShownOrQueued())
@@ -165,27 +167,32 @@ public class SearchBooks extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         SwipeController swipeController = new SwipeController(this);
-        swipeController.setOnSwipeRightListener(position -> {
-            if (books.get(position).isFavorite(getBaseContext())) {
-                books.get(position).removeFromFavorites(getBaseContext(), books.get(position).getApiId());
-                Snackbar.make(findViewById(R.id.main_layout), "Removed from favorites", Snackbar.LENGTH_SHORT).show();
+        swipeController.setOnSwipeListener(new OnSwipeListener() {
+            @Override
+            public void onSwipeRight(int position) {
+                if (books.get(position).isFavorite(getBaseContext())) {
+                    books.get(position).removeFromFavorites(getBaseContext(), books.get(position).getApiId());
+                    Snackbar.make(findViewById(R.id.main_layout), "Removed from favorites", Snackbar.LENGTH_SHORT).show();
+                }
+                adapter.notifyItemChanged(position);
             }
-            adapter.notifyItemChanged(position);
-        });
-        swipeController.setOnSwipeLeftListener(position -> {
-            if (!books.get(position).isFavorite(getBaseContext())) {
-                books.get(position).addToFavorites(getBaseContext());
-                Snackbar.make(findViewById(R.id.main_layout), "Added to favorites", Snackbar.LENGTH_SHORT).show();
+
+            @Override
+            public void onSwipeLeft(int position) {
+                if (!books.get(position).isFavorite(getBaseContext())) {
+                    books.get(position).addToFavorites(getBaseContext());
+                    Snackbar.make(findViewById(R.id.main_layout), "Added to favorites", Snackbar.LENGTH_SHORT).show();
+                }
+                adapter.notifyItemChanged(position);
             }
-            adapter.notifyItemChanged(position);
         });
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         // Triggers when the device takes too long to connect
-        NetworkUtils.setOnConnectionTimeoutListener(new ConnectionListener() {
+        NetworkUtils.INSTANCE.setOnConnectionTimeoutListener(new ConnectionListener() {
             @Override
-            public void onConnectionTimeout(IOException e) {
+            public void onConnectionTimeout(@NonNull IOException e) {
                 Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
                 if (v != null) {
                     v.vibrate(100);
@@ -194,7 +201,7 @@ public class SearchBooks extends AppCompatActivity {
             }
         });
 
-        new SearchBooksTask().execute(NetworkUtils.buildUrl(searchQuery, MAX_RESULTS, startIndex));
+        new SearchBooksTask().execute(NetworkUtils.INSTANCE.buildUrl(searchQuery, MAX_RESULTS, startIndex));
 
         progressBar.setVisibility(View.VISIBLE);
     }
@@ -233,7 +240,7 @@ public class SearchBooks extends AppCompatActivity {
     private void showConnectionError(String message) {
         snackbar = Snackbar.make(findViewById(R.id.main_layout), message, Snackbar.LENGTH_INDEFINITE)
                 .setAction("RETRY", v ->
-                        new SearchBooksTask().execute(NetworkUtils.buildUrl(searchQuery, MAX_RESULTS, startIndex)));
+                        new SearchBooksTask().execute(NetworkUtils.INSTANCE.buildUrl(searchQuery, MAX_RESULTS, startIndex)));
         snackbar.addCallback(new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
@@ -264,7 +271,7 @@ public class SearchBooks extends AppCompatActivity {
                 adapter.clear();
                 progressBar.setVisibility(View.VISIBLE);
                 startIndex = 0;
-                new SearchBooksTask().execute(NetworkUtils.buildUrl(searchQuery, MAX_RESULTS, startIndex));
+                new SearchBooksTask().execute(NetworkUtils.INSTANCE.buildUrl(searchQuery, MAX_RESULTS, startIndex));
 
             }
         }
@@ -315,7 +322,7 @@ public class SearchBooks extends AppCompatActivity {
             String JSONResponse;
             try {
                 // Make the API request from the built URL
-                JSONResponse = NetworkUtils.makeHttpRequest(searchQuery);
+                JSONResponse = NetworkUtils.INSTANCE.makeHttpRequest(searchQuery);
                 JSONObject baseJSONObject = new JSONObject(JSONResponse);
 
                 // The start index will always be zero for a new book so
