@@ -48,23 +48,21 @@ import java.util.ArrayList;
 public class SearchBooks extends AppCompatActivity {
 
     private final String TAG = SearchBooks.class.getSimpleName();
-    final int VOICE_REQUEST_CODE = 100;
-    ArrayList<Book> books;
-    ProgressBar progressBar;
-    RecyclerView recyclerView;
-    ViewAdapter adapter;
-    LinearLayoutManager manager;
-    ScrollListener scrollListener;
-    ConnectivityReceiver connectivityReceiver;
-    String searchQuery;
-    Snackbar snackbar;
-    RelativeLayout emptyView;
-    PersistentSearchView searchView;
-    int startIndex;
-    boolean isLoading = false;
-    boolean isLastPage = false;
-    final int MAX_RESULTS = 10;
-    int totalItems;
+    private final int VOICE_REQUEST_CODE = 100;
+    private ArrayList<Book> books;
+    private ProgressBar progressBar;
+    private RecyclerView recyclerView;
+    private ViewAdapter adapter;
+    private ConnectivityReceiver connectivityReceiver;
+    private String searchQuery;
+    private Snackbar snackbar;
+    private RelativeLayout emptyView;
+    private PersistentSearchView searchView;
+    private int startIndex;
+    private boolean isLoading = false;
+    private boolean isLastPage = false;
+    private final int MAX_RESULTS = 10;
+    private int totalItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,10 +77,10 @@ public class SearchBooks extends AppCompatActivity {
         progressBar = findViewById(R.id.progress_bar);
         recyclerView = findViewById(R.id.recycler_view);
         searchView = findViewById(R.id.search_view_books);
-        if (searchQuery.startsWith(SuggestionBuilder.SEARCH_AUTHOR)) {
-            searchView.populateEditText(searchQuery.replace(SuggestionBuilder.SEARCH_AUTHOR, ""));
-        } else if (searchQuery.startsWith(SuggestionBuilder.SEARCH_SUBJECT)) {
-            searchView.populateEditText(searchQuery.replace(SuggestionBuilder.SEARCH_SUBJECT, ""));
+        if (searchQuery.startsWith(SuggestionBuilder.Companion.getSEARCH_AUTHOR())) {
+            searchView.populateEditText(searchQuery.replace(SuggestionBuilder.Companion.getSEARCH_AUTHOR(), ""));
+        } else if (searchQuery.startsWith(SuggestionBuilder.Companion.getSEARCH_SUBJECT())) {
+            searchView.populateEditText(searchQuery.replace(SuggestionBuilder.Companion.getSEARCH_SUBJECT(), ""));
         } else {
             searchView.populateEditText(searchQuery);
         }
@@ -121,12 +119,12 @@ public class SearchBooks extends AppCompatActivity {
 
         registerReceiver(connectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
-        manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(manager);
         recyclerView.setHasFixedSize(true);
         // This is triggered when the recycler view reaches the bottom of the list
-        scrollListener = new ScrollListener(manager) {
+        ScrollListener scrollListener = new ScrollListener(manager) {
             @Override
             protected void loadMoreItems() {
                 // Only load more items if there's internet connection
@@ -140,12 +138,12 @@ public class SearchBooks extends AppCompatActivity {
             }
 
             @Override
-            public boolean isLastPage() {
+            public boolean getMIsLastPage() {
                 return isLastPage;
             }
 
             @Override
-            public boolean isLoading() {
+            public boolean getMIsLoading() {
                 return isLoading;
             }
         };

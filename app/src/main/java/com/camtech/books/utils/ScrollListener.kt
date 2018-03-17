@@ -10,14 +10,14 @@ abstract class ScrollListener(private val layoutManager: LinearLayoutManager) : 
         val visibleItemCount = layoutManager.childCount
         val totalItemCount = layoutManager.itemCount
         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-        if (!isLoading && !isLastPage) {
+        if (!mIsLoading && !mIsLastPage) {
             if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
                 loadMoreItems()
             }
         }
     }
     
-    abstract val isLastPage: Boolean
-    abstract val isLoading: Boolean
+    abstract val mIsLastPage: Boolean
+    abstract val mIsLoading: Boolean
     protected abstract fun loadMoreItems()
 }

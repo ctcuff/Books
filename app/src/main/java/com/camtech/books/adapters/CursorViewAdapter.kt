@@ -24,7 +24,7 @@ import java.util.*
  *  so we need to wrap the cursor adapter inside a RecyclerView adapter
  *
  */
-class CursorViewAdapter(private val context: Context, c: Cursor) : RecyclerView.Adapter<CursorViewAdapter.ViewHolder>() {
+class CursorViewAdapter(private val context: Context, c: Cursor?) : RecyclerView.Adapter<CursorViewAdapter.ViewHolder>() {
 
 
     private var cursorAdapter: CursorAdapter
