@@ -22,7 +22,7 @@ class Book(private var title: String,
             private var buyLink: String?,
             private var apiId: String) {
 
-    private var TAG = Book::class.java.simpleName
+    private val TAG = Book::class.java.simpleName
 
     init {
         if (authors == null) authors = arrayOf("Unknown")
@@ -44,6 +44,15 @@ class Book(private var title: String,
 
         fun byteArrayToBitmap(data: ByteArray): Bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
     }
+
+    fun getTitle() = title
+    fun getAuthors() = authors
+    fun getDescription() = description
+    fun getPublisher() = publisher
+    fun getSmallThumbnail() = smallThumbnail
+    fun getThumbnail() = thumbnail
+    fun getBuyLink() = buyLink
+    fun getApiId() = apiId
 
     fun addToFavorites(context: Context) {
         // Only add the book to the database if it isn't already there
@@ -112,16 +121,6 @@ class Book(private var title: String,
         }
         return false
     }
-
-
-    fun getTitle() = title
-    fun getAuthors() = authors
-    fun getDescription() = description
-    fun getPublisher() = publisher
-    fun getSmallThumbnail() = smallThumbnail
-    fun getThumbnail() = thumbnail
-    fun getBuyLink() = buyLink
-    fun getApiId() = apiId
 
     private fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
         val stream = ByteArrayOutputStream()

@@ -23,6 +23,7 @@ class ViewAdapter(private val context: Context,
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var onItemClickListener: OnItemClickListener? = null
+    private var l: ((Int) -> Unit)? = null
     private var isLoadingAdded = false
     private val ITEM = 0
     private val LOADING = 1
@@ -60,6 +61,16 @@ class ViewAdapter(private val context: Context,
     override fun getItemViewType(position: Int): Int =
             if (position == books.size - 1 && isLoadingAdded) LOADING else ITEM
 
+    fun addBook(book: Book) {
+        // Before we add the book the the array list,
+        // we need to check if it's already been added
+        val alreadyAdded = (0 until books.size).any { books[it].getApiId() == book.getApiId() }
+        if (!alreadyAdded) {
+            books.add(book)
+            notifyDataSetChanged()
+        }
+    }
+
     fun clear() {
         books.clear()
         notifyItemRangeChanged(0, books.size)
@@ -78,6 +89,7 @@ class ViewAdapter(private val context: Context,
         this.onItemClickListener = onItemClickListener
     }
 
+
     interface OnItemClickListener {
         fun onItemClicked(position: Int)
     }
@@ -95,6 +107,7 @@ class ViewAdapter(private val context: Context,
         }
 
         override fun onClick(v: View) {
+
             onItemClickListener?.onItemClicked(adapterPosition)
         }
     }

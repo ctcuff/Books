@@ -26,7 +26,7 @@ class BookDetails : AppCompatActivity() {
         val authors = Arrays.toString(bookDetailIntent.getStringArrayExtra(Book.AUTHORS))
                 .replace("[", "").replace("]", "")
         val publisher = bookDetailIntent.getStringExtra(Book.PUBLISHER)
-        val thumbnail = bookDetailIntent.getParcelableExtra<Bitmap>(Book.THUMBNAIL)
+        val thumbnail: Bitmap = bookDetailIntent.getParcelableExtra(Book.THUMBNAIL)
         val description = bookDetailIntent.getStringExtra(Book.DESCRIPTION)
         val buyLink = bookDetailIntent.getStringExtra(Book.BUY_LINK)
 
@@ -44,6 +44,7 @@ class BookDetails : AppCompatActivity() {
         tvBookAuthor.text = getString(R.string.book_detail_authors, authors)
         ivBookImage.setImageBitmap(thumbnail)
         tvBookPublisher.text = getString(R.string.book_detail_publisher, publisher)
+
         if (description != null) {
             tvBookDescription.text = getString(R.string.book_detail_description, description)
         } else {
