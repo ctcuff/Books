@@ -55,7 +55,7 @@ class CursorViewAdapter(private val context: Context, c: Cursor?) : RecyclerView
                 val apiIdIndex = cursor.getColumnIndex(DBContract.BookEntry.COLUMN_API_ID)
 
                 val bookTitle = cursor.getString(titleIndex)
-                val bookAuthor = cursor.getString(authorIndex)
+                val bookAuthor = cursor.getString(authorIndex).replace("[", "").replace("]", "")
                 val bookPublisher = cursor.getString(publisherIndex)
                 val smallThumbnail = Book.byteArrayToBitmap(cursor.getBlob(smallThumbnailIndex))
                 val thumbnail = Book.byteArrayToBitmap(cursor.getBlob(thumbnailIndex))
@@ -98,6 +98,7 @@ class CursorViewAdapter(private val context: Context, c: Cursor?) : RecyclerView
     fun getBook(position: Int): Book = books[position]
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
         private var cardView: CardView = itemView.findViewById(R.id.root)
 
         init {
@@ -106,12 +107,12 @@ class CursorViewAdapter(private val context: Context, c: Cursor?) : RecyclerView
 
         override fun onClick(v: View?) {
             val bookDetailIntent = Intent(context, BookDetails::class.java)
-            bookDetailIntent.putExtra(Book.TITLE, getBook(adapterPosition).getTitle())
-            bookDetailIntent.putExtra(Book.AUTHORS, getBook(adapterPosition).getAuthors())
-            bookDetailIntent.putExtra(Book.PUBLISHER, getBook(adapterPosition).getPublisher())
-            bookDetailIntent.putExtra(Book.DESCRIPTION, getBook(adapterPosition).getDescription())
-            bookDetailIntent.putExtra(Book.THUMBNAIL, getBook(adapterPosition).getThumbnail())
-            bookDetailIntent.putExtra(Book.BUY_LINK, getBook(adapterPosition).getBuyLink())
+            bookDetailIntent.putExtra(Book.TITLE, getBook(adapterPosition).title)
+            bookDetailIntent.putExtra(Book.AUTHORS, getBook(adapterPosition).authors)
+            bookDetailIntent.putExtra(Book.PUBLISHER, getBook(adapterPosition).publisher)
+            bookDetailIntent.putExtra(Book.DESCRIPTION, getBook(adapterPosition).description)
+            bookDetailIntent.putExtra(Book.THUMBNAIL, getBook(adapterPosition).thumbnail)
+            bookDetailIntent.putExtra(Book.BUY_LINK, getBook(adapterPosition).buyLink)
             context.startActivity(bookDetailIntent)
         }
     }

@@ -13,14 +13,14 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 
 
-class Book(private var title: String,
-            private var authors: Array<String>?,
-            private var publisher: String? ,
-            private var description: String?,
-            private var smallThumbnail: Bitmap?,
-            private var thumbnail: Bitmap?,
-            private var buyLink: String?,
-            private var apiId: String) {
+class Book(var title: String,
+           var authors: Array<String>?,
+           var publisher: String?,
+           var description: String?,
+           var smallThumbnail: Bitmap?,
+           var thumbnail: Bitmap?,
+           var buyLink: String?,
+           var apiId: String) {
 
     private val TAG = Book::class.java.simpleName
 
@@ -29,6 +29,8 @@ class Book(private var title: String,
         if (publisher == null) publisher = "Unknown"
     }
 
+    // Constants used for parsing the JSON result
+    // returned by the Google Books API
     companion object {
         const val VOLUME_INFO = "volumeInfo"
         const val TITLE = "title"
@@ -44,15 +46,6 @@ class Book(private var title: String,
 
         fun byteArrayToBitmap(data: ByteArray): Bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
     }
-
-    fun getTitle() = title
-    fun getAuthors() = authors
-    fun getDescription() = description
-    fun getPublisher() = publisher
-    fun getSmallThumbnail() = smallThumbnail
-    fun getThumbnail() = thumbnail
-    fun getBuyLink() = buyLink
-    fun getApiId() = apiId
 
     fun addToFavorites(context: Context) {
         // Only add the book to the database if it isn't already there

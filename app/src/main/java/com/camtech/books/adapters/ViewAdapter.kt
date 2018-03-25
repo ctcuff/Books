@@ -23,7 +23,6 @@ class ViewAdapter(private val context: Context,
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var onItemClickListener: OnItemClickListener? = null
-    private var l: ((Int) -> Unit)? = null
     private var isLoadingAdded = false
     private val ITEM = 0
     private val LOADING = 1
@@ -42,11 +41,11 @@ class ViewAdapter(private val context: Context,
         when (getItemViewType(position)) {
             ITEM -> {
                 val bvh = holder as BookViewHolder
-                bvh.tvTitle.text = context.getString(R.string.book_title, books[position].getTitle())
+                bvh.tvTitle.text = context.getString(R.string.book_title, books[position].title)
                 bvh.tvAuthor.text = context.getString(R.string.book_author,
-                        Arrays.toString(books[position].getAuthors()).replace("[", "").replace("]", ""))
-                bvh.tvPublisher.text = context.getString(R.string.book_publisher, books[position].getPublisher())
-                bvh.ivSmallThumbnail.setImageBitmap(books[position].getSmallThumbnail())
+                        Arrays.toString(books[position].authors).replace("[", "").replace("]", ""))
+                bvh.tvPublisher.text = context.getString(R.string.book_publisher, books[position].publisher)
+                bvh.ivSmallThumbnail.setImageBitmap(books[position].smallThumbnail)
                 // If the book has been added to favorites (A.K.A, is in the database) so show the bookmark icon
                 if (books[position].isFavorite(context)) bvh.ivFavorite.visibility = View.VISIBLE
                 else bvh.ivFavorite.visibility = View.GONE
@@ -64,7 +63,7 @@ class ViewAdapter(private val context: Context,
     fun addBook(book: Book) {
         // Before we add the book the the array list,
         // we need to check if it's already been added
-        val alreadyAdded = (0 until books.size).any { books[it].getApiId() == book.getApiId() }
+        val alreadyAdded = (0 until books.size).any { books[it].apiId == book.apiId }
         if (!alreadyAdded) {
             books.add(book)
             notifyDataSetChanged()
@@ -107,7 +106,6 @@ class ViewAdapter(private val context: Context,
         }
 
         override fun onClick(v: View) {
-
             onItemClickListener?.onItemClicked(adapterPosition)
         }
     }

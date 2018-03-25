@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             // We set the on swipe listener to use the
             // same action for both swipe directions
             override fun onSwipe(position: Int) {
-                adapter.getBook(position).removeFromFavorites(baseContext, adapter.getBook(position).getApiId())
+                adapter.getBook(position).removeFromFavorites(baseContext, adapter.getBook(position).apiId)
                 reloadRecyclerView()
                 Snackbar.make(drawerLayout, "Removed from favorites", Snackbar.LENGTH_SHORT).show()
             }

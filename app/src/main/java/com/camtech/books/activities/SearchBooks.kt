@@ -140,12 +140,12 @@ class SearchBooks : AppCompatActivity() {
             override fun onItemClicked(position: Int) {
                 // Package the details of the current book to BookDetails activity
                 val bookDetailIntent = Intent(baseContext, BookDetails::class.java)
-                bookDetailIntent.putExtra(Book.TITLE, books[position].getTitle())
-                bookDetailIntent.putExtra(Book.AUTHORS, books[position].getAuthors())
-                bookDetailIntent.putExtra(Book.PUBLISHER, books[position].getPublisher())
-                bookDetailIntent.putExtra(Book.DESCRIPTION, books[position].getDescription())
-                bookDetailIntent.putExtra(Book.THUMBNAIL, books[position].getThumbnail())
-                bookDetailIntent.putExtra(Book.BUY_LINK, books[position].getBuyLink())
+                bookDetailIntent.putExtra(Book.TITLE, books[position].title)
+                bookDetailIntent.putExtra(Book.AUTHORS, books[position].authors)
+                bookDetailIntent.putExtra(Book.PUBLISHER, books[position].publisher)
+                bookDetailIntent.putExtra(Book.DESCRIPTION, books[position].description)
+                bookDetailIntent.putExtra(Book.THUMBNAIL, books[position].thumbnail)
+                bookDetailIntent.putExtra(Book.BUY_LINK, books[position].buyLink)
                 startActivity(bookDetailIntent)
             }
         })
@@ -155,7 +155,7 @@ class SearchBooks : AppCompatActivity() {
         swipeController.setOnSwipeListener(object : OnSwipeListener() {
             override fun onSwipeRight(position: Int) {
                 if (books[position].isFavorite(baseContext)) {
-                    books[position].removeFromFavorites(baseContext, books[position].getApiId())
+                    books[position].removeFromFavorites(baseContext, books[position].apiId)
                     Snackbar.make(findViewById(R.id.main_layout), "Removed from favorites", Snackbar.LENGTH_SHORT).show()
                 }
                 adapter.notifyItemChanged(position)
